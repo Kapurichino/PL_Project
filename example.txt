@@ -31,5 +31,5 @@ mainprog main;
         end
 
 begin
-
+    a = 3;
 end
