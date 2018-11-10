@@ -1,0 +1,35 @@
+mainprog main;
+    var a : int;
+    var b,c : float;
+    var d : array [5] of int;
+
+    function f : int;
+        var x1 : int;
+        var y1 : float;
+
+        begin
+            x1 = 123;
+            y1 = 234;
+        end
+    
+    function func (i,j:array[3] of float; k:int) : float;
+        var x2 : int;
+        var y2 : float;
+
+        begin
+            x2=456;
+            y2=567;
+        end
+
+
+    procedure proc (n : float ; m : array [2] of int);
+        var x3 : array [3] of int;
+        var y3 : float;
+
+        begin
+            return x3;
+        end
+
+begin
+
+end
