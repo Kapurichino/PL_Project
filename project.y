@@ -18,21 +18,32 @@
   } 
 %}
 
+%union{
+char *stringValue;
+int intValue;
+float floatValue;
+}
+
+%token<intValue> INTEGER
+%token<floatValue> FLOAT
+%token<stringValue> ID
+
 %token INT_T FLOAT_T MAINPROG_T VAR_T ARRAY_T OF_T FUNCTION_T PROCEDURE_T BEGIN_T END_T IF_T THEN_T ELSE_T NOP_T WHILE_T RETURN_T PRINT_T
-%token ID FLOAT INTEGER
 %token LESS_T LOE_T GOE_T GREATER_T EQUAL_T DIFF_T PLUS_T MINUS_T MUL_T DIV_T
 %token NOT_T SEMICOLON_T DOT_T COMMA_T ASSIGN_T RPARAN_T LPARAN_T 
 %token LBRACKET_T RBRACKET_T COLON_T
 
 %%
 program : MAINPROG_T ID SEMICOLON_T declarations subprogram_declarations compound_statement
-declarations :  | VAR_T identifier_list COLON_T type SEMICOLON_T declarations
+declarations :  |
+VAR_T identifier_list COLON_T type SEMICOLON_T declarations
+
 identifier_list : ID | ID COMMA_T identifier_list
 type : standard_type | ARRAY_T LBRACKET_T INTEGER RBRACKET_T OF_T standard_type
 standard_type : INT_T | FLOAT_T
 subprogram_declarations :  | subprogram_declaration subprogram_declarations
 
-subprogram_declaration : subprogram_head declarations compound_statement
+subprogram_declaration : subprogram_head declarations compound_statement { printf("subprogram");}
 subprogram_head : FUNCTION_T ID arguments COLON_T standard_type SEMICOLON_T | PROCEDURE_T ID arguments SEMICOLON_T
 arguments : | LPARAN_T parameter_list RPARAN_T
 parameter_list : identifier_list COLON_T type | identifier_list COLON_T type SEMICOLON_T parameter_list
