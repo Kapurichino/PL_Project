@@ -1,7 +1,8 @@
 %{
 #include <stdlib.h>
-void yyerror(char *);
+#include <math.h>
 #include "project.tab.h"
+void yyerror(char *);
 %}
 
 %%
@@ -56,11 +57,11 @@ return INTEGER;
 "." printf(".");    return DOT_T;
 "," printf(",");    return COMMA_T;
 "=" printf("="); return ASSIGN_T;
-"(" printf("LPARAN"); return LPARAN_T;
-")" printf("RPARAN"); return RPARAN_T;
+"(" printf("("); return LPARAN_T;
+")" printf(")"); return RPARAN_T;
 "[" printf("["); return LBRACKET_T;
 "]" printf("]"); return RBRACKET_T;
-":" printf("colon"); return COLON_T;
+":" printf(":"); return COLON_T;
 
 \n  printf("\n");
 " "|\t|#[^\n]*\n printf(" ");
