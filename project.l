@@ -13,7 +13,7 @@ var     printf("var");      return VAR_T;
 array   printf("array");    return ARRAY_T;
 of      printf("of");       return OF_T;
 function    printf("function");    return FUNCTION_T;
-procedure   printf("prodecure");    return PROCEDURE_T;
+procedure   printf("procedure");    return PROCEDURE_T;
 begin   printf("begin");    return BEGIN_T;
 end     printf("end "); return END_T;
 if      printf("if");   return IF_T;
