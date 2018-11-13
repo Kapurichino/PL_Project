@@ -1,40 +1,42 @@
 %{
+  #define NULL 0
   #include <stdio.h>
+  #include <stdlib.h>
   #include <string.h>
   struct vartab {
 	char *name;
-	double value;
 	int *ivalarr;
-	double *dvalarr;
-	
+	float *fvalarr;
 	int type;
-    struct vartab *next; 
+  int size;
+  struct vartab *next; 
 };
  struct vartab *varlist;
 extern void *malloc();
-    void yyerror(const char *str)
-  {
-    printf("%s",str);
-  }
-  int yywrap()
-  {
-    return 1;
-  } 
-int main()
-  {
+int state;
+int add_var(char *name, int type, int size);
+struct vartab * lookup_var(char *name);
+void printList(struct vartab *);
+void yyerror(const char *str){
+  printf("%s",str);
+}
+int yywrap(){
+  return 1;
+} 
+int main(){
   printf("!%d!",sizeof(struct vartab));
-    yyparse();
-  } 
+  yyparse();
+  printList(varlist);
+  return 0;
+} 
 enum {
 LOOKUP = 0,
 INTVAL,
-DOUBLEVAL,
+FLOATVAL,
 INTARR,
-DOUBLEARR
+FLOATARR
 };
-int state;
-int add_var(char *name, int type);
-int lookup_var(char *name);
+
 %}
 %union{
 char *stringValue;
@@ -58,19 +60,14 @@ program : MAINPROG_T ID SEMICOLON_T declarations subprogram_declarations compoun
 declarations :  |
 VAR_T identifier_list COLON_T type SEMICOLON_T declarations {
 	printf("identifier_list = %s\n",$<stringValue>2);
-	if(strcmp($<stringValue>4,"1")==0){
-		add_var($<stringValue>2,1);
-	} else if(strcmp($<stringValue>4,"2")==0){
-		add_var($<stringValue>2,2);
-	} else {
-		if($<stringValue>4[1]=='3'){
-			printf("This is int arr value \n");
-		} else if($<stringValue>4[1]=='4'){
-			printf("This is float arr value \n");
-		} else {
-			
-		}
-	}
+  int varType = atoi(strtok($<stringValue>4,"@"));
+  int varSize = atoi(strtok(NULL,"@"));
+	char *varName = strtok($<stringValue>2,"@");
+  if(varSize == 0)  varSize = 1;
+  do{
+    printf("varName=%s, varType=%d, varSize=%d\n",varName,varType,varSize);
+    add_var(varName,varType,varSize);
+  }while(varName = strtok(NULL,"@"));
 };
 identifier_list : ID {$$ = $1;}
 				| ID COMMA_T identifier_list {
@@ -79,6 +76,7 @@ identifier_list : ID {$$ = $1;}
 				};
 type : standard_type { $$ = $<stringValue>1; }
 		| ARRAY_T LBRACKET_T INTEGER RBRACKET_T OF_T standard_type {
+      $$ = strdup("");
 			if(strcmp($<stringValue>6,"1")==0){
 				strcat($$,"3@");
 			} else {
@@ -114,28 +112,55 @@ relop : GREATER_T | GOE_T | LESS_T | LOE_T | EQUAL_T | DIFF_T
 addop : PLUS_T | MINUS_T
 multop : MUL_T | DIV_T
 %%
-int add_var(char *name, int type){
+int add_var(char *name, int type, int size){
     struct vartab *vp;
-    if(lookup_var(name)!=LOOKUP){
+    if(lookup_var(name)){
         printf("!! warning: variable %s already defined \n",name);
         return 0;
     }
-    
     vp=(struct vartab*)malloc(sizeof(struct vartab));
     vp->next = varlist;
-    vp->value=0;
     vp->name=(char*)malloc(strlen(name)+1);
     strcpy(vp->name,name);
     vp->type=type;
+    vp->size=size;
     varlist = vp;
+    /**/
+    if(type == INTVAL || type == INTARR){
+      vp->ivalarr = (int*)malloc(sizeof(int)*size);
+    }
+    else if(type == FLOATVAL || type == FLOATARR){
+      vp->fvalarr = (float*)malloc(sizeof(float)*size);
+    }
+
     return 1;
 }
-int lookup_var(char *name){
+struct vartab * lookup_var(char *name){
     struct vartab *vp = varlist;
     
     for(;vp;vp=vp->next){
         if(strcmp(vp->name,name)==0)
-        return 1;
+        return vp;
     }
-    return LOOKUP;
+    return 0;
+}
+
+void printList(struct vartab* vp){
+  int cnt = 0;
+  while(vp){
+    if(vp->type == INTVAL || vp-> type == INTARR){
+      for(int i = 0; i < vp->size; i++){
+        printf("%s[%d] %d\n",vp->name,i, vp->ivalarr[i]);
+      } 
+    }
+    else if(vp->type == FLOATVAL || vp-> type == FLOATARR){
+      for(int i = 0; i < vp->size; i++){
+        printf("%s[%d] %f\n",vp->name,i, vp->ivalarr[i]);
+      } 
+    }
+    vp = vp->next;
+    cnt++;
+  }
+  printf("# of variable is %d\n", cnt);
+  return;
 }

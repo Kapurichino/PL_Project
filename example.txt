@@ -9,7 +9,7 @@ mainprog main;
 
         begin
             x1 = 123;
-            y1 = 234;
+            y1 = 234
         end
     
     function func (i,j:array[3] of float; k:int) : float;
@@ -18,7 +18,7 @@ mainprog main;
 
         begin
             x2=456;
-            y2=567;
+            y2=567
         end
 
 
@@ -27,9 +27,9 @@ mainprog main;
         var y3 : float;
 
         begin
-            return x3;
+            return x3
         end
 
 begin
-    a = 3;
+    a = 3
 end
