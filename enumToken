@@ -1,0 +1,22 @@
+enum TknKind {
+	INTNUM, FLOATNUM, EOFTKN, Others, EOF_T,
+	ID, INT, FLOAT,
+	MAINPROG, VAR, ARRAY, OF, FUNCTION, PROCEDURE, BEGIN, END,
+	IF, THEN, ELSE, NOP, WHILE, RETURN, PRINT,
+	PLUS, MINUS, MUL, DIV, LESS, LESSOREQUAL, GRATEROREQUAL, GREATER, ASSIGN, EQUAL, DIFF, NOT,
+	SEMICOLON, DOT, COMMA, LPAREN, RPAREN, LBRACKET, RBRACKET
+};
+
+struct Token {
+	string yytext;
+	TknKind kind;
+	int intVal;
+	float floatVal;
+	Token() { kind = Others; intVal = 0; floatVal = 0.0; }
+	Token(string text, TknKind k, int ival = 0, float fval = 0) {
+		yytext = text;
+		kind = k;
+		intVal = ival; 
+		floatVal = fval;
+	}
+};
