@@ -16,7 +16,9 @@
 	extern int yylex(); // lexical analyzer
 	 
 
-	extern void yyerror(const char*);
+	void yyerror(const char *str) {
+	printf("%s", str);
+	}
 
 	using namespace std;
 
@@ -28,8 +30,17 @@
 %union{
 AST *val;
 }
+
+%right '='
+%left '<' '>'
+%left '+' '-'
+%left '*' '/'
+
+
 %token <val> ID INTEGER FLOAT
 %nonassoc INT_T FLOAT_T
+
+%type<val> factor
 %type<intValue> INT_T FLOAT_T
 %type<stringValue> identifier_list type standard_type
 %token INT_T FLOAT_T MAINPROG_T VAR_T ARRAY_T OF_T FUNCTION_T PROCEDURE_T BEGIN_T END_T IF_T THEN_T ELSE_T NOP_T WHILE_T RETURN_T PRINT_T
@@ -37,11 +48,11 @@ AST *val;
 %token NOT_T SEMICOLON_T DOT_T COMMA_T ASSIGN_T RPARAN_T LPARAN_T 
 %token LBRACKET_T RBRACKET_T COLON_T
 %%
-program : MAINPROG_T ID SEMICOLON_T declarations subprogram_declarations compound_statement{
+program : MAINPROG_T ID SEMICOLON_T global_declarations subprogram_declarations compound_statement{
 
 }
-declarations :  |
-VAR_T identifier_list COLON_T type SEMICOLON_T declarations {
+global_declarations :  |
+VAR_T identifier_list COLON_T type SEMICOLON_T global_declarations {
 	
 };
 identifier_list : ID {
@@ -60,23 +71,61 @@ type : standard_type { }
 
 standard_type : INT_T {}| FLOAT_T {}
 subprogram_declarations :  | subprogram_declaration subprogram_declarations
-subprogram_declaration : subprogram_head declarations compound_statement
+subprogram_declaration : subprogram_head local_declarations compound_statement
+
+local_declarations :  |
+VAR_T identifier_list COLON_T type SEMICOLON_T local_declarations {
+	
+};
+
+
 subprogram_head : FUNCTION_T ID arguments COLON_T standard_type SEMICOLON_T {printf("@@@@@@@@ FUNCTION DECLARED!! @@@@@@@@@\n"); } | PROCEDURE_T ID arguments SEMICOLON_T
 arguments : | LPARAN_T parameter_list RPARAN_T
 parameter_list : identifier_list COLON_T type | identifier_list COLON_T type SEMICOLON_T parameter_list
 compound_statement : BEGIN_T statement_list END_T
 statement_list : statement | statement SEMICOLON_T statement_list
-statement : variable ASSIGN_T expression | print_statement | procedure_statement | compound_statement
+statement : ID ASSIGN_T expression | print_statement | ID LPARAN_T actual_parameter_expression RPARAN_T | compound_statement
 | IF_T expression THEN_T statement ELSE_T statement | WHILE_T LPARAN_T expression RPARAN_T statement | RETURN_T expression | NOP_T
+
 print_statement : PRINT_T | PRINT_T LPARAN_T expression RPARAN_T
 variable : ID | ID LBRACKET_T expression RBRACKET_T
-procedure_statement : ID LPARAN_T actual_parameter_expression RPARAN_T
-actual_parameter_expression :  | expression_list
-expression_list : expression | expression COMMA_T expression_list
-expression : simple_expression | simple_expression relop simple_expression
-simple_expression : term | term addop simple_expression
-term : factor | factor multop term
-factor : INTEGER | FLOAT | variable | procedure_statement | NOT_T factor | sign factor
+
+
+actual_parameter_expression :
+expression {
+	//$$ = makeList1($1);
+}
+|
+actual_parameter_expression COMMA_T expression {
+	//$$ = addLast($1,$3);
+
+}
+//assignment : variable ASSIGN_T expression
+
+
+expression : primary_expression
+| ID LBRACKET_T expression RBRACKET_T ASSIGN_T expression
+| expression PLUS_T expression
+| expression MINUS_T expression
+| expression MUL_T expression
+| expression DIV_T expression
+| expression LESS_T expression
+| expression GREATER_T expression
+| expression LOE_T expression
+| expression GOE_T expression
+| expression EQUAL_T expression
+| expression NOT_T ASSIGN_T expression
+
+primary_expression : 
+INTEGER 
+| FLOAT
+| ID
+| ID LPARAN_T actual_parameter_expression RPARAN_T{
+	
+}
+| NOT_T primary_expression
+| sign primary_expression
+
 sign : PLUS_T | MINUS_T
 relop : GREATER_T | GOE_T | LESS_T | LOE_T | EQUAL_T | DIFF_T
 addop : PLUS_T | MINUS_T
