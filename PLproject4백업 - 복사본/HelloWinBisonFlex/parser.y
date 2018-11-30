@@ -37,10 +37,10 @@ AST *val;
 %token NOT_T SEMICOLON_T DOT_T COMMA_T ASSIGN_T RPARAN_T LPARAN_T 
 %token LBRACKET_T RBRACKET_T COLON_T
 %%
-program : MAINPROG_T ID SEMICOLON_T global_declarations subprogram_declarations compound_statement{
+program : MAINPROG_T ID SEMICOLON_T declarations subprogram_declarations compound_statement{
 
 }
-global_declarations :  |
+declarations :  |
 VAR_T identifier_list COLON_T type SEMICOLON_T declarations {
 	
 };
@@ -60,11 +60,7 @@ type : standard_type { }
 
 standard_type : INT_T {}| FLOAT_T {}
 subprogram_declarations :  | subprogram_declaration subprogram_declarations
-subprogram_declaration : subprogram_head local_declarations compound_statement
-local_declarations :  |
-VAR_T identifier_list COLON_T type SEMICOLON_T declarations {
-	
-};
+subprogram_declaration : subprogram_head declarations compound_statement
 subprogram_head : FUNCTION_T ID arguments COLON_T standard_type SEMICOLON_T {printf("@@@@@@@@ FUNCTION DECLARED!! @@@@@@@@@\n"); } | PROCEDURE_T ID arguments SEMICOLON_T
 arguments : | LPARAN_T parameter_list RPARAN_T
 parameter_list : identifier_list COLON_T type | identifier_list COLON_T type SEMICOLON_T parameter_list
