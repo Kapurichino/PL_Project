@@ -1,6 +1,0 @@
-mainprog main;
-    var a,b,c : array[5] of int;
-  
-begin
-    a = 3
-end
