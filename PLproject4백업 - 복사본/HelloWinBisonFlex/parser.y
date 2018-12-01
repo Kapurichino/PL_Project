@@ -39,11 +39,9 @@ AST *val;
 
 %token ID INTEGER FLOAT
 
-%type<val> factor parameter_list ID identifier_list
-%type<val> argument compound_statement
+%type<val> factor parameter_list ID identifier_list statement_list global_declarations local_declarations
+%type<val> compound_statement statement expression primary_expression subprogram_declarations subprogram_declaration
 
-%type<intValue> INT_T FLOAT_T
-%type<stringValue> identifier_list type standard_type
 %token INT_T FLOAT_T MAINPROG_T VAR_T ARRAY_T OF_T FUNCTION_T PROCEDURE_T BEGIN_T END_T IF_T THEN_T ELSE_T NOP_T WHILE_T RETURN_T PRINT_T
 %token LESS_T LOE_T GOE_T GREATER_T EQUAL_T DIFF_T PLUS_T MINUS_T MUL_T DIV_T
 %token NOT_T SEMICOLON_T DOT_T COMMA_T ASSIGN_T RPARAN_T LPARAN_T 
@@ -174,7 +172,7 @@ expression : primary_expression
 primary_expression : 
 INTEGER 
 | FLOAT
-| ID
+| ID { $$ = makeAST(SYM,$1); }
 | ID LPARAN_T actual_parameter_expression RPARAN_T{
 	
 }
