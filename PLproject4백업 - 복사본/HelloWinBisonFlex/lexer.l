@@ -3,6 +3,7 @@
 %{
 #include <stdlib.h>
 #include "AST.h"
+#include "interp.h"
 #include "parser.h"
 #pragma warning (disable: 4005)
 	#pragma warning (disable: 4996)
@@ -30,19 +31,19 @@ return  printf("return");   return RETURN_T;
 print   printf("print");    return PRINT_T;
 
 [a-z|A-Z][0-9|a-z|A-Z]*  {
-
+yylval.val=makeSymbol(yytext);
 printf("%s ",yytext);
 return ID;
 }
 
 [0-9]+"."[0-9]+ {
-//yylval = atof(yytext);
+yylval.val = makeFloat(atof(yytext));
 printf("%s" , yytext);
 return FLOAT;
 }
 
 [0-9]+ {
-//yylval = atoi(yytext);
+yylval.val = makeNum(atoi(yytext));
 printf("%s", yytext);
 return INTEGER;
 }

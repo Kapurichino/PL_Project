@@ -41,6 +41,15 @@
     <ClCompile Include="AST.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="interp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="interp_expr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="interp_main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="example.txt">
@@ -49,6 +58,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AST.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="interp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

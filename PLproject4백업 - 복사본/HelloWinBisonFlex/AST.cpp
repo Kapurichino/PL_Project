@@ -1,30 +1,35 @@
 #include <stdlib.h>
 #include "AST.h"
+#include <iostream>
+
+using namespace std;
 
 Symbol SymbolTable[MAX_SYMBOLS];
 int n_symbols = 0;
 
 AST *makeNum(int val)
 {
+	cout << "int AST만들어짐" << endl;
     AST *p;
     p = (AST *)malloc(sizeof(AST));
     p->op = NUM;
     p->val = val;
     return p;
 }
-
-AST *makeStr(char *s)
+AST *makeFloat (float val)
 {
-    AST *p;
-    p = (AST *)malloc(sizeof(AST));
-    p->op = STR;
-    p->str = s;
-    return p;
+	AST *p;
+	p = (AST *)malloc(sizeof(AST));
+	p->op = FLO;
+	p->val = val;
+	return p;
 }
+
 
 
 AST *makeAST(enum code op,AST *left,AST *right)
 {
+
     AST *p;
     p = (AST *)malloc(sizeof(AST));
     p->op = op;
@@ -72,10 +77,11 @@ Symbol *lookupSymbol(char *name)
     for(i = 0; i < n_symbols; i++){
 	if(strcmp(SymbolTable[i].name,name) == 0){
 	    sp = &SymbolTable[i];
+		cout << "심볼 중복됨" << endl;
 	    break;
 	}
     }
-    if(sp == NULL){
+    if(sp == NULL){//못찾았을경우
 	sp = &SymbolTable[n_symbols++];
 	sp->name = _strdup(name);
     }
@@ -84,6 +90,8 @@ Symbol *lookupSymbol(char *name)
 
 AST *makeSymbol(char *name)
 {
+
+	cout << "심볼만들어짐" << name << endl;
     AST *p;
 
     p = (AST *)malloc(sizeof(AST));
@@ -94,10 +102,10 @@ AST *makeSymbol(char *name)
 
 Symbol *getSymbol(AST *p)
 {
+	cout << p->op << endl;
     if(p->op != SYM){
 	fprintf(stderr,"bad access to symbol\n");
 	exit(1);
     }
     else return p->sym;
 }
-

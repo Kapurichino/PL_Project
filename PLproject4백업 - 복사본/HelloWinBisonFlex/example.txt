@@ -1,6 +1,7 @@
 mainprog main;
     var a : int;
     var b,c : float;
+	var a : float;
     var d : array [5] of int;
 
     function f : int;
@@ -8,11 +9,11 @@ mainprog main;
         var y1 : float;
 
         begin
-            x1 = 123;
+            x1= 123;
             y1 = 234
         end
     
-    function func (i,j:array[3] of float; k:int) : float;
+    function meeeee (i,j:array[3] of float; k:int) : float;
         var x2 : int;
         var y2 : float;
 
@@ -31,5 +32,6 @@ mainprog main;
         end
 
 begin
-    a = 3
+    a = 333333;
+	print(a+500)
 end

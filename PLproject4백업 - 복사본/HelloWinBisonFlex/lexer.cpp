@@ -590,13 +590,14 @@ char *yytext;
 #line 4 "lexer.l"
 #include <stdlib.h>
 #include "AST.h"
+#include "interp.h"
 #include "parser.h"
 #pragma warning (disable: 4005)
 	#pragma warning (disable: 4996)
 
 
-#line 598 "lexer.cpp"
 #line 599 "lexer.cpp"
+#line 600 "lexer.cpp"
 
 #define INITIAL 0
 
@@ -810,9 +811,9 @@ YY_DECL
 		}
 
 	{
-#line 13 "lexer.l"
+#line 14 "lexer.l"
 
-#line 815 "lexer.cpp"
+#line 816 "lexer.cpp"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -871,234 +872,234 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 14 "lexer.l"
+#line 15 "lexer.l"
 printf("int");      return INT_T;
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 15 "lexer.l"
+#line 16 "lexer.l"
 printf("float");    return FLOAT_T;
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 16 "lexer.l"
+#line 17 "lexer.l"
 printf("mainprog"); return MAINPROG_T;
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 17 "lexer.l"
+#line 18 "lexer.l"
 printf("var");      return VAR_T;
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 18 "lexer.l"
+#line 19 "lexer.l"
 printf("array");    return ARRAY_T;
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 19 "lexer.l"
+#line 20 "lexer.l"
 printf("of");       return OF_T;
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 20 "lexer.l"
+#line 21 "lexer.l"
 printf("function");    return FUNCTION_T;
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 21 "lexer.l"
+#line 22 "lexer.l"
 printf("procedure");    return PROCEDURE_T;
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 22 "lexer.l"
+#line 23 "lexer.l"
 printf("begin");    return BEGIN_T;
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 23 "lexer.l"
+#line 24 "lexer.l"
 printf("end "); return END_T;
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 24 "lexer.l"
+#line 25 "lexer.l"
 printf("if");   return IF_T;
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 25 "lexer.l"
+#line 26 "lexer.l"
 printf("then"); return THEN_T;
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 26 "lexer.l"
+#line 27 "lexer.l"
 printf("else"); return ELSE_T;
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 27 "lexer.l"
+#line 28 "lexer.l"
 printf("nop");  return NOP_T;
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 28 "lexer.l"
+#line 29 "lexer.l"
 printf("while");    return WHILE_T;
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 29 "lexer.l"
+#line 30 "lexer.l"
 printf("return");   return RETURN_T;
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 30 "lexer.l"
+#line 31 "lexer.l"
 printf("print");    return PRINT_T;
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 32 "lexer.l"
+#line 33 "lexer.l"
 {
-
+yylval.val=makeSymbol(yytext);
 printf("%s ",yytext);
 return ID;
 }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 38 "lexer.l"
+#line 39 "lexer.l"
 {
-//yylval = atof(yytext);
+yylval.val = makeFloat(atof(yytext));
 printf("%s" , yytext);
 return FLOAT;
 }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 44 "lexer.l"
+#line 45 "lexer.l"
 {
-//yylval = atoi(yytext);
+yylval.val = makeNum(atoi(yytext));
 printf("%s", yytext);
 return INTEGER;
 }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 50 "lexer.l"
+#line 51 "lexer.l"
 printf("+");    return PLUS_T;
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 51 "lexer.l"
+#line 52 "lexer.l"
 printf("-");    return MINUS_T;
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 52 "lexer.l"
+#line 53 "lexer.l"
 printf("*");    return MUL_T;
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 53 "lexer.l"
+#line 54 "lexer.l"
 printf("/");    return DIV_T;
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 54 "lexer.l"
+#line 55 "lexer.l"
 printf("<");    return LESS_T;
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 55 "lexer.l"
+#line 56 "lexer.l"
 printf("<=");   return LOE_T;
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 56 "lexer.l"
+#line 57 "lexer.l"
 printf(">=");   return GOE_T;
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 57 "lexer.l"
+#line 58 "lexer.l"
 printf(">");    return GREATER_T;
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 58 "lexer.l"
+#line 59 "lexer.l"
 printf("==");   return EQUAL_T;
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 59 "lexer.l"
+#line 60 "lexer.l"
 printf("!");    return NOT_T; 
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 60 "lexer.l"
+#line 61 "lexer.l"
 printf("!=");    return DIFF_T;  
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 61 "lexer.l"
+#line 62 "lexer.l"
 printf(";");    return SEMICOLON_T;
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 62 "lexer.l"
+#line 63 "lexer.l"
 printf(".");    return DOT_T;
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 63 "lexer.l"
+#line 64 "lexer.l"
 printf(",");    return COMMA_T;
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 64 "lexer.l"
+#line 65 "lexer.l"
 printf("="); return ASSIGN_T;
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 65 "lexer.l"
+#line 66 "lexer.l"
 printf("("); return LPARAN_T;
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 66 "lexer.l"
+#line 67 "lexer.l"
 printf(")"); return RPARAN_T;
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 67 "lexer.l"
+#line 68 "lexer.l"
 printf("["); return LBRACKET_T;
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 68 "lexer.l"
+#line 69 "lexer.l"
 printf("]"); return RBRACKET_T;
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 69 "lexer.l"
+#line 70 "lexer.l"
 printf(":"); return COLON_T;
 	YY_BREAK
 case 41:
 /* rule 41 can match eol */
 YY_RULE_SETUP
-#line 71 "lexer.l"
+#line 72 "lexer.l"
 printf("\n");
 	YY_BREAK
 case 42:
 /* rule 42 can match eol */
 YY_RULE_SETUP
-#line 72 "lexer.l"
+#line 73 "lexer.l"
 printf(" ");
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 75 "lexer.l"
+#line 76 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 1101 "lexer.cpp"
+#line 1102 "lexer.cpp"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2099,5 +2100,5 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 75 "lexer.l"
+#line 76 "lexer.l"
 

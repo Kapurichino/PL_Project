@@ -4,6 +4,7 @@
 %{
 
 #include "AST.h"
+#include "interp.h"
 	#include <iostream>
 	  #define NULL 0
   #include <stdio.h>
@@ -39,58 +40,56 @@ AST *val;
 
 %token ID INTEGER FLOAT
 
-%type<val> factor parameter_list ID identifier_list statement_list global_declarations local_declarations
+%type<val> factor parameter_list ID identifier_list statement_list INTEGER
 %type<val> compound_statement statement expression primary_expression subprogram_declarations subprogram_declaration
+%type<val> actual_parameter_expression local_declarations arguments block program
 
 %token INT_T FLOAT_T MAINPROG_T VAR_T ARRAY_T OF_T FUNCTION_T PROCEDURE_T BEGIN_T END_T IF_T THEN_T ELSE_T NOP_T WHILE_T RETURN_T PRINT_T
 %token LESS_T LOE_T GOE_T GREATER_T EQUAL_T DIFF_T PLUS_T MINUS_T MUL_T DIV_T
 %token NOT_T SEMICOLON_T DOT_T COMMA_T ASSIGN_T RPARAN_T LPARAN_T 
 %token LBRACKET_T RBRACKET_T COLON_T
 %%
-program : MAINPROG_T ID SEMICOLON_T global_declarations subprogram_declarations compound_statement{
+program : MAINPROG_T ID SEMICOLON_T local_declarations subprogram_declarations compound_statement{
+	AST *maintemp = makeAST(BLOCK_STATEMENT,$4,$6);
+	AST *temp = makeSymbol("main");
+	defineFunction(getSymbol(temp),NULL,maintemp);
+}
 
-}
-global_declarations :  |
-VAR_T identifier_list COLON_T standard_type SEMICOLON_T global_declarations {
-	//declareVariable(getSymbol($2),NULL);
-}
-|
-VAR_T identifier_list COLON_T ARRAY_T LBRACKET_T INTEGER RBRACKET_T OF_T standard_type SEMICOLON_T global_declarations{
-	//declareArray(getSymbol($2),$6);
-}
 identifier_list : ID {
-					//$$ = makeList1($1);
+					$$ = makeList1($1);
 				}
 				| identifier_list COMMA_T ID {
-					//$$ = addLast($1,$3);
+					$$ = addLast($1,$3);
 				};
 type : standard_type { }
 		| ARRAY_T LBRACKET_T INTEGER RBRACKET_T OF_T standard_type {
     
 		}
 		
-
-
-
 standard_type : INT_T {}| FLOAT_T {}
 subprogram_declarations :  | subprogram_declaration subprogram_declarations
 subprogram_declaration :
-FUNCTION_T ID arguments COLON_T standard_type SEMICOLON_T local_declarations compound_statement
+FUNCTION_T ID arguments COLON_T standard_type SEMICOLON_T block
 {
-//defineFunction(getSymbol($2),$3,$8);
+defineFunction(getSymbol($2),$3,$7);
 }
 |
-PROCEDURE_T ID arguments SEMICOLON_T local_declarations compound_statement
+PROCEDURE_T ID arguments SEMICOLON_T block
 {
-//defineFunction(getSymbol($2),$3,$6);
+defineFunction(getSymbol($2),$3,$5);
 }
-local_declarations :  |
+
+block: local_declarations compound_statement{
+	$$ = makeAST(BLOCK_STATEMENT,$1,$2);
+}
+
+local_declarations :  {$$=NULL;} |
 VAR_T identifier_list COLON_T standard_type SEMICOLON_T local_declarations {
-//?????????????????????
+	$$ = $2;
 }
 |
 VAR_T identifier_list COLON_T ARRAY_T LBRACKET_T INTEGER RBRACKET_T OF_T standard_type SEMICOLON_T local_declarations{
-	//declareArray(getSymbol($2),$6);
+	//지역 변수 배열
 }
 
 arguments : | LPARAN_T parameter_list RPARAN_T
@@ -104,89 +103,101 @@ compound_statement : BEGIN_T statement_list END_T
 
 statement_list : 
 statement{
-//$$=makeList1($1);
+$$=makeList1($1);
 }
 | 
 statement_list SEMICOLON_T statement{
-//$$=addLast($1,$3);
+$$=addLast($1,$3);
 }
 
 
 statement : 
 ID ASSIGN_T expression {
-//$$ = makeAST(EQ_OP,$1,$3);
+$$ = makeAST(EQ_OP,$1,$3);
 }
 | PRINT_T {
-//
+
 }
 | PRINT_T LPARAN_T expression RPARAN_T{
-//$$ = makeAST(PRINTLN_OP,$3,NULL);
+$$ = makeAST(PRINTLN_OP,$3,NULL);
 }
 | ID LPARAN_T actual_parameter_expression RPARAN_T {
-//$$ = makeAST(CALL_OP,$1,$3);
+$$ = makeAST(CALL_OP,$1,$3);
 }
 | ID LPARAN_T RPARAN_T{
-//$$ = makeAST(CALL_OP,$1, NULL);
+$$ = makeAST(CALL_OP,$1, NULL);
 }
 | compound_statement
 | IF_T expression THEN_T statement ELSE_T statement {
-//$$ = makeAST(IF_STATEMENT,$2,makeList2($4,$6));
+$$ = makeAST(IF_STATEMENT,$2,makeList2($4,$6));
 }
 | WHILE_T LPARAN_T expression RPARAN_T statement {
-//$$ = makeAST(WHILE_STATEMENT,$3,$5);
+$$ = makeAST(WHILE_STATEMENT,$3,$5);
 }
 | RETURN_T expression {
-//$$ = makeAST(RETURN_STATEMENT,$2,NULL);
+$$ = makeAST(RETURN_STATEMENT,$2,NULL);
 }
 | RETURN_T {
-//$$ = makeAST(RETURN_STATEMENT,NULL,NULL);
+$$ = makeAST(RETURN_STATEMENT,NULL,NULL);
 }
 | NOP_T
 
 
 actual_parameter_expression :
 expression {
-	//$$ = makeList1($1);
+	$$ = makeList1($1);
 }
 |
 actual_parameter_expression COMMA_T expression {
-	//$$ = addLast($1,$3);
+	$$ = addLast($1,$3);
 
 }
 //assignment : variable ASSIGN_T expression
 
 
 expression : primary_expression
+| NOT_T primary_expression
 | ID LBRACKET_T expression RBRACKET_T ASSIGN_T expression
-| expression PLUS_T expression
-| expression MINUS_T expression
-| expression MUL_T expression
-| expression DIV_T expression
-| expression LESS_T expression
-| expression GREATER_T expression
-| expression LOE_T expression
-| expression GOE_T expression
-| expression EQUAL_T expression
-| expression NOT_T ASSIGN_T expression
+|  expression PLUS_T expression{
+	$$ = makeAST(PLUS_OP,$1,$3); 
+}
+| expression MINUS_T expression{
+$$ = makeAST(PLUS_OP,$1,$3); 
+}
+| expression MUL_T expression{
+	$$ = makeAST(MUL_OP,$1,$3); 
+}
+| expression DIV_T expression{
+	$$ = makeAST(DIV_OP,$1,$3); 
+}
+| expression LESS_T expression{
+$$ = makeAST(LT_OP,$1,$3); 
+}
+| expression GREATER_T expression{
+	$$ = makeAST(GT_OP,$1,$3); 
+}
+| expression LOE_T expression{
+	$$ = makeAST(LOE_OP,$1,$3); 
+}
+| expression GOE_T expression{
+	$$ = makeAST(GOE_OP,$1,$3); 
+}
+| expression EQUAL_T expression{ // ==
+	$$ = makeAST(EQUAL_OP,$1,$3); 
+}
+| expression NOT_T ASSIGN_T expression{ // !=
+	$$ = makeAST(DIF_OP,$1,$4); 
+}
+| sign primary_expression
 
 primary_expression : 
-INTEGER 
+INTEGER
 | FLOAT
-| ID { $$ = makeAST(SYM,$1); }
+| ID 
 | ID LPARAN_T actual_parameter_expression RPARAN_T{
-	
+	$$ = makeAST(CALL_OP,$1,$3);
 }
-| NOT_T primary_expression
-| sign primary_expression
 
 sign : PLUS_T | MINUS_T
 
 %%
-
-int main(int argc, char **argv) {
-	yyin = fopen("example.txt", "r");
-	yyparse();
-	fclose(yyin);
-
-	return 0;
-}

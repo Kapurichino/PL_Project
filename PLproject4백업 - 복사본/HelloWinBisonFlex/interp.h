@@ -18,7 +18,7 @@ int setArray(int *ap,int index,int value);
 /* interp.c */
 int  setValue(Symbol *var,int val);
 int  getValue(Symbol *var);
-//void bindEnv(int k,Symbol *var,int val);
+void bindEnv(int k,Symbol *var,int val);
 
 int  executeCallFunc(Symbol *f,AST *args);
 void executeReturn(AST *expr);
