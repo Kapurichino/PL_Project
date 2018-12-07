@@ -180,6 +180,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AST.cpp" />
+    <ClCompile Include="interp.cpp" />
+    <ClCompile Include="interp_expr.cpp" />
+    <ClCompile Include="interp_main.cpp" />
     <ClCompile Include="lexer.cpp" />
     <ClCompile Include="parser.cpp" />
     <ClCompile Include="Source.cpp" />
@@ -189,6 +192,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AST.h" />
+    <ClInclude Include="interp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
