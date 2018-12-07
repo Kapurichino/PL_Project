@@ -7,9 +7,9 @@ extern FILE* yyin;
 int main()
 {
     int r;
-	yyin = fopen("example.txt", "r");
-	yyparse();
-	fclose(yyin);
+    yyin = fopen("example.txt", "r")
+    yyparse();
+    fclose(yyin);
 
 
     /* execute main */
