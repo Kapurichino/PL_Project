@@ -43,14 +43,15 @@ AST *val;
 %type<val> factor parameter_list ID identifier_list statement_list INTEGER
 %type<val> compound_statement statement expression primary_expression subprogram_declarations subprogram_declaration
 %type<val> actual_parameter_expression local_declarations arguments block program
+%type<val> compound_statement_list
 
 %token INT_T FLOAT_T MAINPROG_T VAR_T ARRAY_T OF_T FUNCTION_T PROCEDURE_T BEGIN_T END_T IF_T THEN_T ELSE_T NOP_T WHILE_T RETURN_T PRINT_T
 %token LESS_T LOE_T GOE_T GREATER_T EQUAL_T DIFF_T PLUS_T MINUS_T MUL_T DIV_T
 %token NOT_T SEMICOLON_T DOT_T COMMA_T ASSIGN_T RPARAN_T LPARAN_T 
 %token LBRACKET_T RBRACKET_T COLON_T
 %%
-program : MAINPROG_T ID SEMICOLON_T local_declarations subprogram_declarations compound_statement{
-	AST *maintemp = makeAST(BLOCK_STATEMENT,$4,$6);
+program : MAINPROG_T ID SEMICOLON_T local_declarations subprogram_declarations BEGIN_T statement_list END_T{
+	AST *maintemp = makeAST(BLOCK_STATEMENT,$4,$7);
 	AST *temp = makeSymbol("main");
 	defineFunction(getSymbol(temp),NULL,maintemp);
 }
@@ -79,8 +80,9 @@ PROCEDURE_T ID arguments SEMICOLON_T block
 defineFunction(getSymbol($2),$3,$5);
 }
 
-block: local_declarations compound_statement{
-	$$ = makeAST(BLOCK_STATEMENT,$1,$2);
+block: local_declarations BEGIN_T statement_list END_T{
+	$$ = makeAST(BLOCK_STATEMENT,$1,$3);
+	cout<<"block op : "<<$$->op<<endl;
 }
 
 local_declarations :  {$$=NULL;} |
@@ -97,8 +99,6 @@ parameter_list : identifier_list COLON_T standard_type
 | identifier_list COLON_T standard_type SEMICOLON_T parameter_list
 | identifier_list COLON_T ARRAY_T LBRACKET_T INTEGER RBRACKET_T OF_T standard_type
 | identifier_list COLON_T ARRAY_T LBRACKET_T INTEGER RBRACKET_T OF_T standard_type SEMICOLON_T parameter_list
-compound_statement : BEGIN_T statement_list END_T
-
 
 
 statement_list : 
@@ -110,13 +110,19 @@ statement_list SEMICOLON_T statement{
 $$=addLast($1,$3);
 }
 
-
+compound_statement: BEGIN_T statement_list END_T{
+$$=$2;
+}
 statement : 
+compound_statement{
+	$$=$1;
+}
+|
 ID ASSIGN_T expression {
+cout<<"assign expression"<<endl;
 $$ = makeAST(EQ_OP,$1,$3);
 }
 | PRINT_T {
-
 }
 | PRINT_T LPARAN_T expression RPARAN_T{
 $$ = makeAST(PRINTLN_OP,$3,NULL);
@@ -127,7 +133,8 @@ $$ = makeAST(CALL_OP,$1,$3);
 | ID LPARAN_T RPARAN_T{
 $$ = makeAST(CALL_OP,$1, NULL);
 }
-| compound_statement
+
+
 | IF_T expression THEN_T statement ELSE_T statement {
 $$ = makeAST(IF_STATEMENT,$2,makeList2($4,$6));
 }
@@ -162,7 +169,7 @@ expression : primary_expression
 	$$ = makeAST(PLUS_OP,$1,$3); 
 }
 | expression MINUS_T expression{
-$$ = makeAST(PLUS_OP,$1,$3); 
+$$ = makeAST(MINUS_OP,$1,$3); 
 }
 | expression MUL_T expression{
 	$$ = makeAST(MUL_OP,$1,$3); 
@@ -185,8 +192,8 @@ $$ = makeAST(LT_OP,$1,$3);
 | expression EQUAL_T expression{ // ==
 	$$ = makeAST(EQUAL_OP,$1,$3); 
 }
-| expression NOT_T ASSIGN_T expression{ // !=
-	$$ = makeAST(DIF_OP,$1,$4); 
+| expression DIFF_T expression{ // !=
+	$$ = makeAST(DIFF_OP,$1,$3); 
 }
 | sign primary_expression
 
