@@ -9,7 +9,7 @@ int n_symbols = 0;
 
 AST *makeNum(int val)
 {
-	cout << "int AST¸¸µé¾îÁü" << endl;
+	//cout << "int AST¸¸µé¾îÁü" << endl;
     AST *p;
     p = (AST *)malloc(sizeof(AST));
     p->op = NUM;
@@ -29,7 +29,7 @@ AST *makeFloat (float val)
 
 AST *makeAST(enum code op,AST *left,AST *right)
 {
-
+	//cout << "AST¸¦ ¸¸µë, op=" << op << endl;
     AST *p;
     p = (AST *)malloc(sizeof(AST));
     p->op = op;
@@ -41,7 +41,7 @@ AST *makeAST(enum code op,AST *left,AST *right)
 AST *getNth(AST *p,int nth)
 {
     if(p->op != LIST){
-	fprintf(stderr,"bad access to list\n");
+	fprintf(stderr,"bad access to list getNth \n");
 	exit(1);
     }
     if(nth > 0) return(getNth(p->right,nth-1));
@@ -59,10 +59,20 @@ AST *addLast(AST *l,AST *p)
     return l;
 }
 
+AST *addList(AST *list1, AST* list2) {
+	AST *q;
+
+	if (list1 == NULL) return list2;
+	q = list1;
+	while (q->right != NULL) q = q->right;
+	q->right = list2;
+	return list1;
+}
+
 AST *getNext(AST *p)
 {
     if(p->op != LIST){
-	fprintf(stderr,"bad access to list\n");
+	fprintf(stderr,"bad access to list getNext \n");
 	exit(1);
     }
     else return p->right;
@@ -77,7 +87,7 @@ Symbol *lookupSymbol(char *name)
     for(i = 0; i < n_symbols; i++){
 	if(strcmp(SymbolTable[i].name,name) == 0){
 	    sp = &SymbolTable[i];
-		cout << "½Éº¼ Áßº¹µÊ" << endl;
+		//cout << "½Éº¼ Áßº¹µÊ" << endl;
 	    break;
 	}
     }
@@ -91,7 +101,7 @@ Symbol *lookupSymbol(char *name)
 AST *makeSymbol(char *name)
 {
 
-	cout << "½Éº¼¸¸µé¾îÁü" << name << endl;
+	//cout << "½Éº¼¸¸µé¾îÁü" << name << endl;
     AST *p;
 
     p = (AST *)malloc(sizeof(AST));
@@ -102,10 +112,11 @@ AST *makeSymbol(char *name)
 
 Symbol *getSymbol(AST *p)
 {
-	cout << p->op << endl;
+	//cout << p->op << endl;
     if(p->op != SYM){
 	fprintf(stderr,"bad access to symbol\n");
 	exit(1);
     }
     else return p->sym;
 }
+

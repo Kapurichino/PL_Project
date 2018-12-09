@@ -21,7 +21,7 @@ enum code {
 	LOE_OP,
 	GOE_OP,
 	DIV_OP,
-	DIF_OP,
+	DIFF_OP,
 	EQUAL_OP,// ==
     GET_ARRAY_OP,
     SET_ARRAY_OP,
@@ -70,6 +70,7 @@ AST *makeAST(enum code op,AST *right,AST *left);
 AST *getNth(AST *p,int nth);
 AST *getNext(AST *p);
 AST *addLast(AST *l,AST *p);
+AST *addList(AST *list1, AST* list2);
 
 #define getFirst(p) getNth(p,0)
 #define makeList1(x1) makeAST(LIST,x1,NULL)

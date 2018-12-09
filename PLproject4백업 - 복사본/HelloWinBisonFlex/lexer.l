@@ -42,12 +42,16 @@ printf("%s" , yytext);
 return FLOAT;
 }
 
+[-][0-9]+ {
+yylval.val = makeNum(atoi(yytext));
+printf("%s", yytext);
+return INTEGER;
+}
 [0-9]+ {
 yylval.val = makeNum(atoi(yytext));
 printf("%s", yytext);
 return INTEGER;
 }
-
 "+" printf("+");    return PLUS_T;
 "-" printf("-");    return MINUS_T;
 "*" printf("*");    return MUL_T;

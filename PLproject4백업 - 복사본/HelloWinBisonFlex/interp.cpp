@@ -61,7 +61,9 @@ int executeCallFunc(Symbol *f,AST *args)
     if(setjmp(ret_env) != 0){
 	val = funcReturnVal;
     } else {
+		cout << "함수의 body를 실행합니다" << endl;
 	executeStatement(f->func_body);
+
     }
     envp -= nargs;
     funcReturnEnv = ret_env_save;
@@ -74,7 +76,10 @@ static int executeFuncArgs(AST *params,AST *args)
   int val;
   int nargs;
 
-  if(params == NULL) return 0;
+  if (params == NULL) {
+	  cout << "함수의 파라미터가 없음" << endl;
+	  return 0;
+  }
   val = executeExpr(getFirst(args));
   var = getSymbol(getFirst(params));
   nargs = executeFuncArgs(getNext(params),getNext(args));
@@ -95,6 +100,7 @@ void executeStatement(AST *p)
     if(p == NULL) return;
     switch(p->op){
     case BLOCK_STATEMENT:
+	cout << "BLOCK_STATEMENT" << endl;
 	executeBlock(p->left,p->right);
 	break;
     case RETURN_STATEMENT:
@@ -104,13 +110,11 @@ void executeStatement(AST *p)
 	executeIf(p->left,getNth(p->right,0),getNth(p->right,1));
 	break;
     case WHILE_STATEMENT:
-	executeWhile(p->left,p->right);
-	break;
-    case FOR_STATEMENT:
-	executeFor(getNth(p->left,0),getNth(p->left,1),getNth(p->left,2),
-		   p->right);
+		cout << "값"<<p->left->left->sym->name << endl;
+		executeWhile(p->left, p->right);
 	break;
     default:
+		cout << "defaultstatement" << endl;
 	executeExpr(p);
     }
 }
@@ -121,26 +125,37 @@ void executeBlock(AST *local_vars,AST *statements)
     int envp_save;
 
     envp_save = envp;
-    for(vars = local_vars; vars != NULL; vars = getNext(vars))
-	Env[envp++].var = getSymbol(getFirst(vars));
-    for( ; statements != NULL; statements = getNext(statements))
-	executeStatement(getFirst(statements));
+	for (vars = local_vars; vars != NULL; vars = getNext(vars)) {
+		cout << "로컬변수 가져옴" << endl;
+		Env[envp++].var = getSymbol(getFirst(vars));
+	}
+	for (; statements != NULL; statements = getNext(statements)) {
+		cout << "statement 가져옴" << endl;
+		cout << statements << endl;
+		executeStatement(getFirst(statements));
+	}
     envp = envp_save;
     return;
 }
 
 void executeIf(AST *cond, AST *then_part, AST *else_part)
 {
-    if(executeExpr(cond))
-	executeStatement(then_part);
-    else 
-	executeStatement(else_part);
+	//cout << "cond:" << cond->right->sym->val << endl;
+	if (executeExpr(cond))
+		executeBlock(NULL, then_part);
+	//executeStatement(then_part);
+	else
+		executeBlock(NULL, else_part);
+	//executeStatement(else_part);
 }
 
 void executeWhile(AST *cond,AST *body)
 {
-    while(executeExpr(cond))
-	executeStatement(body);
+	while (executeExpr(cond)) {
+		//cout<<cond->left->sym->name<<endl;
+		//executeStatement(body);
+		executeBlock(NULL, body);
+	}
 }
 
 void executeFor(AST *init,AST *cond,AST *iter,AST *body)

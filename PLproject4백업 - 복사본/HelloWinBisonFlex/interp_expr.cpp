@@ -9,6 +9,7 @@ static void printFunc(AST *args);
 
 int executeExpr(AST *p)
 {
+	//cout << "PÀÇ op´Â = " << p->op << endl;
     if(p == NULL) return 0;
     switch(p->op){
     case NUM:
@@ -16,6 +17,7 @@ int executeExpr(AST *p)
     case SYM:
 	return getValue(getSymbol(p));
     case EQ_OP:
+		cout << "EQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ" << endl;
 	return setValue(getSymbol(p->left),executeExpr(p->right));
     case PLUS_OP:
 	return executeExpr(p->left) + executeExpr(p->right);
@@ -27,6 +29,14 @@ int executeExpr(AST *p)
 	return executeExpr(p->left) < executeExpr(p->right);
     case GT_OP:
 	return executeExpr(p->left) > executeExpr(p->right);
+	case DIFF_OP:
+		return executeExpr(p->left) != executeExpr(p->right);
+	case LOE_OP:
+		return executeExpr(p->left) <= executeExpr(p->right);
+	case GOE_OP:
+		return executeExpr(p->left) >= executeExpr(p->right);
+	case EQUAL_OP:
+		return executeExpr(p->left) == executeExpr(p->right);
     case GET_ARRAY_OP:
 	return getArray(getSymbol(p->left)->addr,executeExpr(p->right));
     case SET_ARRAY_OP:
@@ -39,6 +49,7 @@ int executeExpr(AST *p)
 	printFunc(p->left);
 	return 0;
     default:
+		cout << "DEFAULT" << endl;
 		;
     }
 }
@@ -46,9 +57,11 @@ int executeExpr(AST *p)
 static void printFunc(AST *args)
 {
     AST *p;
-    p = getNth(args,0);
-	if (p->op != STR);
-    printf(p->str,executeExpr(getNth(args,1)));
+	//puts("");
+    //p = getNth(args,0);
+	//if (p->op != STR);
+    //printf(p->str,executeExpr(getNth(args,1)));
+	printf("%d", executeExpr(args));
     printf("\n");
 }
 
