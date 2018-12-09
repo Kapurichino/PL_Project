@@ -5,15 +5,17 @@
 
 typedef struct env {
     Symbol *var;
-    int val;
+    float val;
+	float *arrAddr;
+	enum Type type;
 } Environment;
 
 extern Environment Env[MAX_ENV];
 
 /* interp_expr.c */
 int executeExpr(AST *p);
-int getArray(int *ap, int index);
-int setArray(int *ap,int index,int value);
+float getArray(Symbol *var, int index);
+float setArray(Symbol *var,int index,float value);
 
 /* interp.c */
 int  setValue(Symbol *var,int val);

@@ -16,8 +16,9 @@ int executeExpr(AST *p)
 	return p->val;
     case SYM:
 	return getValue(getSymbol(p));
+	case NOT_OP:
+		return !executeExpr(p->left);
     case EQ_OP:
-		cout << "EQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ" << endl;
 	return setValue(getSymbol(p->left),executeExpr(p->right));
     case PLUS_OP:
 	return executeExpr(p->left) + executeExpr(p->right);
@@ -38,10 +39,10 @@ int executeExpr(AST *p)
 	case EQUAL_OP:
 		return executeExpr(p->left) == executeExpr(p->right);
     case GET_ARRAY_OP:
-	return getArray(getSymbol(p->left)->addr,executeExpr(p->right));
+	return getArray(getSymbol(p->left),(int)executeExpr(p->right));
     case SET_ARRAY_OP:
-	return setArray(getSymbol(getNth(p->left,0))->addr,
-			executeExpr(getNth(p->left,1)),
+	return setArray(getSymbol(getNth(p->left,0)),
+			(int)executeExpr(getNth(p->left,1)),
 			executeExpr(p->right));
     case CALL_OP:
 	return executeCallFunc(getSymbol(p->left),p->right);
@@ -49,7 +50,7 @@ int executeExpr(AST *p)
 	printFunc(p->left);
 	return 0;
     default:
-		cout << "DEFAULT" << endl;
+		//cout << "DEFAULT" << endl;
 		;
     }
 }
@@ -61,7 +62,9 @@ static void printFunc(AST *args)
     //p = getNth(args,0);
 	//if (p->op != STR);
     //printf(p->str,executeExpr(getNth(args,1)));
+
 	printf("%d", executeExpr(args));
+
     printf("\n");
 }
 
@@ -71,7 +74,7 @@ static void printFunc(AST *args)
 void declareVariable(Symbol *vsym,AST *init_value)
 {
 
-	cout << "변수AST만들어짐" << endl;
+	//cout << "변수AST만들어짐" << endl;
     if(init_value != NULL){
 	vsym->val = executeExpr(init_value);
     }
@@ -80,20 +83,8 @@ void declareVariable(Symbol *vsym,AST *init_value)
 /* 
  * Array
  */
-void declareArray(Symbol *a, AST *size)
+/*void declareArray(Symbol *a, AST *size)
 {
-    a->addr = (int*)malloc(sizeof(int)*executeExpr(size));
-}
-
-int getArray(int *ap, int index)
-{
-    return ap[index];
-}
-
-int setArray(int *ap,int index,int value)
-{
-    ap[index] = value;
-    return value;
-}
-
+    a->addr = (float*)malloc(sizeof(float)*executeExpr(size));
+}*/
 

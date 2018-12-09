@@ -45,9 +45,37 @@ int getValue(Symbol *var)
     return var->val;
 }
 
+float getArray(Symbol *var, int index)
+{
+	
+	int i;
+	for (i = envp - 1; i >= 0; i--) {
+		if (Env[i].var == var) return Env[i].arrAddr[index];
+	}
+	return var->val;
+}
+
+float setArray(Symbol *var, int index, float value)
+{
+	//cout << "NAME: "<<var->name << endl;
+	int i;
+	for (i = envp - 1; i >= 0; i--) {
+		if (Env[i].var == var) {
+			//cout << "찾았당" << endl;
+			Env[i].arrAddr[index] = value;
+			//cout << "값 설정" << endl;
+			return Env[i].arrAddr[index];
+		}
+	}
+	return var->val;
+}
+
+
+
+
 int executeCallFunc(Symbol *f,AST *args)
 {
-	cout << "찾아서 실행함" << endl;
+	//cout << "찾아서 실행함" << endl;
     int nargs;
     int val;
     jmp_buf ret_env;
@@ -61,7 +89,7 @@ int executeCallFunc(Symbol *f,AST *args)
     if(setjmp(ret_env) != 0){
 	val = funcReturnVal;
     } else {
-		cout << "함수의 body를 실행합니다" << endl;
+		//cout << "함수의 body를 실행합니다" << endl;
 	executeStatement(f->func_body);
 
     }
@@ -77,7 +105,7 @@ static int executeFuncArgs(AST *params,AST *args)
   int nargs;
 
   if (params == NULL) {
-	  cout << "함수의 파라미터가 없음" << endl;
+	  //cout << "함수의 파라미터가 없음" << endl;
 	  return 0;
   }
   val = executeExpr(getFirst(args));
@@ -100,7 +128,7 @@ void executeStatement(AST *p)
     if(p == NULL) return;
     switch(p->op){
     case BLOCK_STATEMENT:
-	cout << "BLOCK_STATEMENT" << endl;
+	//cout << "BLOCK_STATEMENT" << endl;
 	executeBlock(p->left,p->right);
 	break;
     case RETURN_STATEMENT:
@@ -110,11 +138,11 @@ void executeStatement(AST *p)
 	executeIf(p->left,getNth(p->right,0),getNth(p->right,1));
 	break;
     case WHILE_STATEMENT:
-		cout << "값"<<p->left->left->sym->name << endl;
+		//cout << "값"<<p->left->left->sym->name << endl;
 		executeWhile(p->left, p->right);
 	break;
     default:
-		cout << "defaultstatement" << endl;
+		//cout << "defaultstatement" << endl;
 	executeExpr(p);
     }
 }
@@ -126,12 +154,25 @@ void executeBlock(AST *local_vars,AST *statements)
 
     envp_save = envp;
 	for (vars = local_vars; vars != NULL; vars = getNext(vars)) {
-		cout << "로컬변수 가져옴" << endl;
-		Env[envp++].var = getSymbol(getFirst(vars));
+		Symbol *temp = getSymbol(getFirst(vars));
+		//cout << "로컬변수 가져옴" << endl;
+		if (temp->type == I || temp->type == F) {
+			Env[envp].var = temp;
+		}
+		else if (temp->type == IA || temp->type == FA) {
+			Env[envp].var = temp;
+			Env[envp].arrAddr = (float*)malloc(temp->size * sizeof(float));
+			//cout << "메모리 할당 성공" << endl;
+		}
+		else {
+			//cout << "type error" << endl;
+			exit(1);
+		}
+		Env[envp++].type = temp->type;
 	}
 	for (; statements != NULL; statements = getNext(statements)) {
-		cout << "statement 가져옴" << endl;
-		cout << statements << endl;
+		//cout << "statement 가져옴" << endl;
+		//cout << statements << endl;
 		executeStatement(getFirst(statements));
 	}
     envp = envp_save;

@@ -48,43 +48,43 @@ extern int yydebug;
     ID = 258,
     INTEGER = 259,
     FLOAT = 260,
-    INT_T = 261,
-    FLOAT_T = 262,
-    MAINPROG_T = 263,
-    VAR_T = 264,
-    ARRAY_T = 265,
-    OF_T = 266,
-    FUNCTION_T = 267,
-    PROCEDURE_T = 268,
-    BEGIN_T = 269,
-    END_T = 270,
-    IF_T = 271,
-    THEN_T = 272,
-    ELSE_T = 273,
-    NOP_T = 274,
-    WHILE_T = 275,
-    RETURN_T = 276,
-    PRINT_T = 277,
-    LESS_T = 278,
-    LOE_T = 279,
-    GOE_T = 280,
-    GREATER_T = 281,
-    EQUAL_T = 282,
-    DIFF_T = 283,
-    PLUS_T = 284,
-    MINUS_T = 285,
-    MUL_T = 286,
-    DIV_T = 287,
-    NOT_T = 288,
-    SEMICOLON_T = 289,
-    DOT_T = 290,
-    COMMA_T = 291,
-    ASSIGN_T = 292,
-    RPARAN_T = 293,
-    LPARAN_T = 294,
-    LBRACKET_T = 295,
-    RBRACKET_T = 296,
-    COLON_T = 297
+    MAINPROG_T = 261,
+    VAR_T = 262,
+    ARRAY_T = 263,
+    OF_T = 264,
+    FUNCTION_T = 265,
+    PROCEDURE_T = 266,
+    BEGIN_T = 267,
+    END_T = 268,
+    IF_T = 269,
+    THEN_T = 270,
+    ELSE_T = 271,
+    NOP_T = 272,
+    WHILE_T = 273,
+    RETURN_T = 274,
+    PRINT_T = 275,
+    LESS_T = 276,
+    LOE_T = 277,
+    GOE_T = 278,
+    GREATER_T = 279,
+    EQUAL_T = 280,
+    DIFF_T = 281,
+    MUL_T = 282,
+    DIV_T = 283,
+    NOT_T = 284,
+    SEMICOLON_T = 285,
+    DOT_T = 286,
+    COMMA_T = 287,
+    ASSIGN_T = 288,
+    RPARAN_T = 289,
+    LPARAN_T = 290,
+    LBRACKET_T = 291,
+    RBRACKET_T = 292,
+    COLON_T = 293,
+    INT_T = 294,
+    FLOAT_T = 295,
+    PLUS_T = 296,
+    MINUS_T = 297
   };
 #endif
 
@@ -96,8 +96,10 @@ union YYSTYPE
 #line 31 "parser.y" /* yacc.c:1909  */
 
 AST *val;
+enum Type type;
+int intValue;
 
-#line 101 "parser.h" /* yacc.c:1909  */
+#line 103 "parser.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

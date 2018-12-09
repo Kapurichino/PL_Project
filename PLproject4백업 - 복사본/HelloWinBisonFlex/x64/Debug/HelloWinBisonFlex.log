@@ -1,7 +1,73 @@
 ﻿  Generating lexical analyzer
-  'win_flex'은(는) 내부 또는 외부 명령, 실행할 수 있는 프로그램, 또는
-  배치 파일이 아닙니다.
   Generating syntax parser
-  'win_bison'은(는) 내부 또는 외부 명령, 실행할 수 있는 프로그램, 또는
-  배치 파일이 아닙니다.
-C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppCommon.targets(171,5): error MSB6006: "cmd.exe"이(가) 종료되었습니다(코드: 9009).
+  parser.y:48.12-34: warning: symbol compound_statement_list is used, but is not defined as a token and has no rules [-Wother]
+   %type<val> compound_statement_list
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  parser.y:45.12-17: warning: symbol factor is used, but is not defined as a token and has no rules [-Wother]
+   %type<val> factor parameter_list ID identifier_list statement_list
+              ^^^^^^
+  parser.y:77.24: warning: empty rule for typed nonterminal, and no action [-Wother]
+   subprogram_declarations :  | subprogram_declaration subprogram_declarations
+                          ^
+  parser.y:83.2: warning: empty rule for typed nonterminal, and no action [-Wother]
+   |
+    ^
+  parser.y:204.1-5: warning: type clash on default action: <val> != <> [-Wother]
+   NOP_T
+   ^^^^^
+  parser.y:264.1-7: warning: type clash on default action: <val> != <intValue> [-Wother]
+   INTEGER
+   ^^^^^^^
+  parser.y:265.3-7: warning: type clash on default action: <val> != <> [-Wother]
+   | FLOAT
+     ^^^^^
+parser.y : warning : 3 nonterminals useless in grammar [-Wother]
+parser.y : warning : 2 rules useless in grammar [-Wother]
+  parser.y:71.1-4: warning: nonterminal useless in grammar: type [-Wother]
+   type : standard_type { }
+   ^^^^
+  parser.y:48.12-34: warning: nonterminal useless in grammar: compound_statement_list [-Wother]
+   %type<val> compound_statement_list
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  parser.y:45.12-17: warning: nonterminal useless in grammar: factor [-Wother]
+   %type<val> factor parameter_list ID identifier_list statement_list
+              ^^^^^^
+  parser.y:71.8-24: warning: rule useless in grammar [-Wother]
+   type : standard_type { }
+          ^^^^^^^^^^^^^^^^^
+  parser.y:72.19-74.17: warning: rule useless in grammar [-Wother]
+   		| ARRAY_T LBRACKET_T INTEGER RBRACKET_T OF_T standard_type {
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+parser.y : warning : 116 shift/reduce conflicts [-Wconflicts-sr]
+parser.y : warning : 2 reduce/reduce conflicts [-Wconflicts-rr]
+  parser.y:83.2: warning: rule useless in parser due to conflicts [-Wother]
+   |
+    ^
+  AST.cpp
+c:\users\sh051\desktop\plproject4백업 - 복사본\hellowinbisonflex\ast.cpp(24): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  interp.cpp
+c:\users\sh051\desktop\plproject4백업 - 복사본\hellowinbisonflex\interp.cpp(31): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\sh051\desktop\plproject4백업 - 복사본\hellowinbisonflex\interp.cpp(35): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\sh051\desktop\plproject4백업 - 복사본\hellowinbisonflex\interp.cpp(43): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\sh051\desktop\plproject4백업 - 복사본\hellowinbisonflex\interp.cpp(45): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\sh051\desktop\plproject4백업 - 복사본\hellowinbisonflex\interp.cpp(115): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  interp_expr.cpp
+c:\users\sh051\desktop\plproject4백업 - 복사본\hellowinbisonflex\interp_expr.cpp(42): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\sh051\desktop\plproject4백업 - 복사본\hellowinbisonflex\interp_expr.cpp(46): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\sh051\desktop\plproject4백업 - 복사본\hellowinbisonflex\interp_expr.cpp(44): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\sh051\desktop\plproject4백업 - 복사본\hellowinbisonflex\interp_expr.cpp(60): warning C4101: 'p' :참조되지 않은 지역 변수입니다.
+c:\users\sh051\desktop\plproject4백업 - 복사본\hellowinbisonflex\interp_expr.cpp(79): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  interp_main.cpp
+c:\users\sh051\desktop\plproject4백업 - 복사본\hellowinbisonflex\interp_main.cpp(16): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\stdio.h(207): note: 'fopen' 선언을 참조하십시오.
+c:\users\sh051\desktop\plproject4백업 - 복사본\hellowinbisonflex\interp_main.cpp(66): warning C4477: 'printf' : 서식 문자열 '%s'에 'char *' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'int'입니다.
+c:\users\sh051\desktop\plproject4백업 - 복사본\hellowinbisonflex\interp_main.cpp(66): warning C4313: 'printf': 서식 문자열의 '%s'이(가) 인수 1('int' 형식)과(와) 충돌합니다.
+  lexer.cpp
+c:\users\sh051\desktop\plproject4백업 - 복사본\hellowinbisonflex\lexer.cpp(398): warning C4005: 'yywrap': 매크로 재정의
+  c:\users\sh051\desktop\plproject4백업 - 복사본\hellowinbisonflex\lexer.cpp(74): note: 'yywrap'의 이전 정의를 참조하십시오.
+c:\users\sh051\desktop\plproject4백업 - 복사본\hellowinbisonflex\lexer.l(40): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  parser.cpp
+  Source.cpp
+  코드를 생성하고 있습니다...
+c:\users\sh051\desktop\plproject4백업 - 복사본\hellowinbisonflex\interp_expr.cpp(56): warning C4715: 'executeExpr': 모든 제어 경로에서 값을 반환하지는 않습니다.
+  HelloWinBisonFlex.vcxproj -> C:\Users\sh051\Desktop\PLproject4백업 - 복사본\x64\Debug\PLproject.exe

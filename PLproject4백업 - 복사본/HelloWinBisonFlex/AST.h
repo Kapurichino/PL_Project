@@ -31,9 +31,12 @@ enum code {
     BLOCK_STATEMENT,
     RETURN_STATEMENT,
     WHILE_STATEMENT,
-    FOR_STATEMENT
+    FOR_STATEMENT,
+	NOT_OP
 };
-  
+enum Type {
+	I,F,IA,FA
+};
 
 typedef struct abstract_syntax_tree {
     enum code op;
@@ -46,9 +49,12 @@ typedef struct abstract_syntax_tree {
 typedef struct symbol {
     char *name;
     float val;
-    int *addr;
+	enum Type type;
+    float *addr;
+	int size;
     AST *func_params;
     AST *func_body;
+	
 } Symbol;
 
 #define MAX_SYMBOLS 100

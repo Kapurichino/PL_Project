@@ -7,7 +7,7 @@ using namespace std;
 Symbol SymbolTable[MAX_SYMBOLS];
 int n_symbols = 0;
 
-AST *makeNum(int val)
+AST *makeNum(int val) 
 {
 	//cout << "int AST¸¸µé¾îÁü" << endl;
     AST *p;

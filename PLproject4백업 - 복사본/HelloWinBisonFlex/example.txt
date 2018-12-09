@@ -1,15 +1,10 @@
 mainprog main;
-    var b : int;
+    var a,b,c : int;
 	
-	function fact(a : int) : int;
-		begin
-			if a > 1 then
-				return a * fact(a - 1)
-			else
-				return 1
-		end
-
 begin
-	b = fact(6);
-	print(b)
+	a = 0;
+	b = 200;
+	c = 300;
+
+	print(!a)
 end
